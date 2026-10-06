@@ -64,6 +64,10 @@ Project Structure
 ├── static/                     # Static frontend assets
 ├── templates/                  # HTML templates
 └── tools/                      # Flight and web search integrations
+
+### 🔄 Flow
+
+**User → Web UI → FastAPI → LangGraph Supervisor → Specialist Agents → MCP Tools → Itinerary → Human Approval → Final Agent → Final Response**
 Prerequisites
 
 Before running the project locally, make sure you have:
@@ -95,3 +99,34 @@ The hotel agent uses a remote Tavily MCP search.
 The weather agent calls the custom weather MCP server.
 The itinerary agent creates a practical travel plan.
 The final response is returned through the web API.
+flowchart LR
+
+    A[User] --> B[Web UI]
+    B --> C[FastAPI]
+
+    C --> D[LangGraph]
+
+    D --> E[Supervisor]
+    E --> F[Flight Agent]
+    E --> G[Hotel Agent]
+    E --> H[Weather Agent]
+    E --> I[Budget Agent]
+
+    F --> J[MCP Tools]
+    G --> J
+    H --> J
+
+    F --> K[Shared State]
+    G --> K
+    H --> K
+    I --> K
+
+    K --> L[Itinerary Agent]
+    L --> M[Human Approval]
+
+    M -->|Approve| N[Final Agent]
+    M -->|Revise| L
+
+    N --> O[Final Response]
+
+    D <--> P[(PostgreSQL)]
